@@ -1,6 +1,20 @@
-import os
-from dotenv import load_dotenv
+from dataclasses import dataclass
+from environs import Env
+from typing import Optional
 
-load_dotenv()
-token = os.getenv('BOT_TOKEN')
-print("Токен:", token if token else "Не найден!")
+@dataclass
+class TgBot:
+    token: str
+
+@dataclass
+class Config:
+    tg_bot: TgBot
+
+def load_config(path: Optional[str] = None) -> Config:
+    env = Env()
+    env.read_env(path)
+    return Config(
+        tg_bot=TgBot(
+            token = env('BOT_TOKEN')
+        )
+    )
